@@ -6,6 +6,10 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Clase de tests per als bancs
+ * @author Antonio Mas Esteve
+ */
 class BancTest {
 
     @Test

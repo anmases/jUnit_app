@@ -3,8 +3,14 @@ package org.example.jUnit_app.examples.models;
 import org.example.exceptions.SaldoNegatiu;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -212,5 +218,46 @@ Compte compte;
         assertEquals(new BigDecimal("1134.5678"), compte.getSaldo());
 
     }
+    @ParameterizedTest
+    @ValueSource(strings = {"0", "100", "200", "300", "400", "999", "1000", "2000", "3000.30203"})
+    void testCarrecCompteParametrizat(String valor){
+        System.out.println("Anem a fer un carrec de:\t"+valor);
+        compte.carrec(new BigDecimal(valor));
+        assertNotNull(compte.getSaldo());
+        System.out.println("El saldo de Antonio Mas es:\t"+compte.getSaldo());
+        assertTrue(compte.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+    }
 
+    /**
+     * @author Antonio Mas Esteve
+     * @param valor
+     */
+    @ParameterizedTest
+    @CsvFileSource(resources = "/data.csv")
+    @DisplayName("prova parametrizada CSV de carrec, Antonio Mas")
+    void testCSVCarrecCompteParametrizat(String valor){
+        System.out.println("Anem a fer un carrec de:\t"+valor);
+        compte.carrec(new BigDecimal(valor));
+        assertNotNull(compte.getSaldo());
+        System.out.println("El saldo de Antonio Mas es:\t"+compte.getSaldo());
+        assertTrue(compte.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+    }
+
+    @ParameterizedTest
+    @MethodSource("valorsList")
+    @DisplayName("prova parametrizada CSV de carrec, Antonio Mas")
+    void testMetodeCarrecCompteParametrizat(String valor){
+        System.out.println("Anem a fer un carrec de:\t"+valor);
+        compte.carrec(new BigDecimal(valor));
+        assertNotNull(compte.getSaldo(), "El saldo No es nulo");
+        System.out.println("El saldo de Antonio Mas es:\t"+compte.getSaldo());
+        assertTrue(compte.getSaldo().compareTo(BigDecimal.ZERO) > 0, "El saldo es positivo");
+    }
+    private static List<String> valorsList(){
+        List<String> llista = new ArrayList<>();
+        for(int i = 0; i<10; i++){
+            llista.add(String.valueOf(Math.random()*80));
+        }
+        return llista;
+    }
 }
